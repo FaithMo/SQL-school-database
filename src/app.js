@@ -1,6 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const visitors = require("./sampleData");
+const visitors = require("./dataSample");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -22,7 +22,7 @@ pool.connect(function (err) {
   else console.log("Server Connected!");
 });
 
-app.get("/", (req, res) => {
+app.get("/", (_, res) => {
   res.send("Connected");
 });
 const createTable = () => {
@@ -34,21 +34,20 @@ const createTable = () => {
   );
 };
 
-app.get("/viewVisitors", (req, res) => {
-  createTable()
-  pool.query("SELECT * FROM Visitors", (error, respond) => {
+app.get("/viewVisitors", (_, res) => {
+  createTable();
+  pool.query("SELECT DISTINCT ID, Name FROM Visitors", (error, respond) => {
     console.log(error, respond);
   });
 });
 
 app.get("/viewVisitor:id", (req, res) => {
-  pool.query(`SELECT * FROM Visitors WHERE id = ${id}`, (error, respond) => {
+  pool.query("SELECT * FROM Visitors WHERE id = ${id}", (error, respond) => {
     console.log(error, respond);
   });
 });
 
 app.post("/addNewVisitor", (req, res) => {
-  createTable()
   pool.query(
     `INSERT INTO Visitors(name, age, date, time, assistor, comments) VALUES ($1, $2, $3, $4, $5, $6)`,
     [data.name, data.age, data.date, data.time, data.assistor, data.comments],
