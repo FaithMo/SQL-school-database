@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const pool = require('./config')
 const visitors = require("./dataSample");
 
 const app = express();
@@ -7,15 +8,6 @@ const port = process.env.PORT || 3000;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
-const Pool = require("pg").Pool;
-const pool = new Pool({
-  user: process.env.user,
-  host: process.env.host,
-  database: process.env.database,
-  password: process.env.password,
-  port: process.env.port,
-});
 
 pool.connect(function (err) {
   if (err) console.log(err + " Ooops");
